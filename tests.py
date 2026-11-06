@@ -1,6 +1,6 @@
 import numpy as np
 from scipy import stats
-from model import CAPMModel
+from model import RegressionModel
 
 
 class T_test:
@@ -34,8 +34,48 @@ class F_test:
         return F_stat, p_value, accept_null
 
 
-#class 
+class Reset_test:
+    def __init__(self, model):
+        self.model = model
+        
+    
+    def test(self, p, alpha=0.05):
+        aux_model = RegressionModel(beta=None)
+        X_new = self.model.X
+        for i in range(2, p + 1):
+            X_new = np.column_stack((X_new, self.model.fitted**i))
+        aux_model.train(X_new, self.model.Y)
+        f_test = F_test(self.model, aux_model)
+        test_res = f_test.test(self.model.Y, alpha)
+        return test_res
 
+
+class Chow_test:
+    def __init__(self, model):
+        self.model = model
+
+    def test_given_t(self, t, alpha=0.05):
+        X1 = self.model.X[:t]
+        Y1 = self.model.Y[:t]
+        aux_model_1 = RegressionModel(beta=None)
+        aux_model_1.train(X1, Y1)
+        X2 = self.model.X[t:]
+        Y2 = self.model.Y[t:]
+        aux_model_2 = RegressionModel(beta=None)
+        aux_model_2.train(X2, Y2)
+        concatenated_model = aux_model_1 + aux_model_2
+        f_test = F_test(self.model, concatenated_model)
+        test_res = f_test.test(self.model.Y, alpha)
+        return test_res
+
+    def test(self, trim=0.1, alpha=0.05):
+        test_res_list = []
+        le_y = len(self.model.Y)
+        start = int(trim * le_y) #10
+        end = le_y - start + 1   #91, l'ultimo è escluso
+        for t in range(start, end):
+            test_res_list.append(self.test_given_t(t, alpha))
+        return test_res_list
 
 
 
@@ -44,7 +84,7 @@ if __name__ == "__main__":
 
     dataset = load_dataset("dataset")
     X, Y = dataset['RM'] - dataset['RF'], dataset['Ri_AAPL'] - dataset['RF']
-    model = CAPMModel(beta=None)
+    model = RegressionModel(beta=None)
     model.train(X, Y)
     t_test = T_test(model)
     t_stat, p_values, accept_null = t_test.test(Y)

@@ -15,7 +15,8 @@ class Stats:
 
     def compute_stats(self, parameters, X, Y, predictions, X_new):
         self.init_vals(parameters, X, Y, predictions, X_new)
-        self.stats['dataset_variance'] = self.get_variance()
+        self.stats['residuals'] = self.get_residuals()
+        self.stats['residual_variance'] = self.get_variance()
         self.stats['parameter_variance'] = self.get_parameters_variance()
         self.stats['forecast_error_variance'] = self.forecast_error_variance()
         return self.stats
