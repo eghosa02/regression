@@ -3,7 +3,7 @@ from helpers import with_design_matrix
 from Statistics import Stats
 
 
-class CAPMModel:
+class RegressionModel:
     def __init__(self, beta):
         self.beta:np.ndarray = beta
         self.X = None
@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     dataset = load_dataset("dataset")
     X, Y = dataset['RM'] - dataset['RF'], dataset['Ri_AAPL'] - dataset['RF']
-    model = CAPMModel(beta=None)
+    model = RegressionModel(beta=None)
     model.train(X, Y)
     plot_reg(X, Y, model)
     print(model.get_stats())

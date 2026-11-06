@@ -34,7 +34,7 @@ class F_test:
         return F_stat, p_value, accept_null
 
 
-class 
+#class 
 
 
 
