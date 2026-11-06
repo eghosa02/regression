@@ -33,6 +33,7 @@ class RegressionModel:
         self.fitted = X @ self.beta
         return self.beta
 
+
     def __add__(self, other):
 
         if self.beta is None or other.beta is None:

@@ -1,6 +1,8 @@
 import numpy as np
 from scipy import stats
 from model import RegressionModel
+from itertools import combinations_with_replacement
+from sklearn.preprocessing import PolynomialFeatures
 
 
 class T_test:
@@ -77,6 +79,46 @@ class Chow_test:
             test_res_list.append(self.test_given_t(t, alpha))
         return test_res_list
 
+
+class White_test:
+    def __init__(self, model):
+        self.model = model
+
+
+    def test(self, deg=2, alpha=0.05):
+        res = self.model.get_stats()['residuals']**2
+        X = self.model.X[:, 1:]
+        X_U = PolynomialFeatures(degree=deg, include_bias=False).fit_transform(X)
+        model = RegressionModel(beta=None)
+        model.train(X_U, res)
+        model_r = RegressionModel(beta=None)
+        model_r.train(np.ones((len(res), 1)), res)
+        f_test = F_test(model_r, model)
+        test_res = f_test.test(res, alpha)
+        return test_res
+
+
+class DW_test: #DA CONSULTARE I VALORI TABELLATI PER CONFERMARE O MENO H0
+    def __init__(self, model):
+        self.model = model
+
+    def test(self, alpha=0.05):
+        res = self.model.get_stats()['residuals']
+        num = np.sum((res[1:] - res[:len(res)-1])**2)
+        den = res.T@res
+        return num/den
+
+
+class BG_test:
+    def __init__(self, model):
+        self.model = model
+    
+    def test(self, alpha=0.05):
+        
+        return 
+
+
+    
 
 
 if __name__ == "__main__":
