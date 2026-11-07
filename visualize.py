@@ -11,6 +11,7 @@ def plot_reg(x, y, model):
     plt.title('Regression')
     plt.savefig('regression.png')
 
+
 def plot_chow_stats(secquence, treshold):
     f_vals = [secquence[i][0] for i in range(len(secquence))]
     p_vals = [secquence[i][1] for i in range(len(secquence))]
