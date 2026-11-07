@@ -113,9 +113,22 @@ class BG_test:
     def __init__(self, model):
         self.model = model
     
-    def test(self, alpha=0.05):
-        
-        return 
+    def test(self, p, alpha=0.05):
+        res = self.model.get_stats()['residuals']
+        model = RegressionModel(beta=None)
+        model.train(self.model.X, res)
+        aux_model = RegressionModel(beta=None)
+
+        lags = np.column_stack([
+            np.concatenate((np.zeros(j), res[:-j]))       #giustamente la matrice dei residui di base senza lag ha lo stesso numero di righe di X, quindi ad ogni lag, bisogna anticipare con numero di zeri necessari per eguagliarne la dimensione
+                for j in range(1, p + 1)
+        ])
+        X_U = np.hstack((self.model.X, lags)) 
+        aux_model.train(X_U, res)
+
+        f_test = F_test(model, aux_model)
+        test_res = f_test.test(res, alpha)
+        return test_res
 
 
     
