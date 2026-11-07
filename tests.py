@@ -77,7 +77,7 @@ class Chow_test:
         end = le_y - start + 1   #91, l'ultimo è escluso
         for t in range(start, end):
             test_res_list.append(self.test_given_t(t, alpha))
-        return test_res_list
+        return test_res_list, alpha
 
 
 class White_test:
@@ -136,13 +136,12 @@ class BG_test:
 
 if __name__ == "__main__":
     from dataset import load_dataset
+    from visualize import plot_chow_stats
 
     dataset = load_dataset("dataset")
     X, Y = dataset['RM'] - dataset['RF'], dataset['Ri_AAPL'] - dataset['RF']
     model = RegressionModel(beta=None)
     model.train(X, Y)
-    t_test = T_test(model)
-    t_stat, p_values, accept_null = t_test.test(Y)
-    print("T-statistics:", t_stat)
-    print("P-values:", p_values)
-    print("Accept null hypothesis:", accept_null)
+    test = Chow_test(model)
+    sec, alpha = test.test()
+    plot_chow_stats(sec, alpha)
