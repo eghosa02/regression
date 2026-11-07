@@ -1,7 +1,6 @@
 import numpy as np
 from scipy import stats
 from model import RegressionModel
-from itertools import combinations_with_replacement
 from sklearn.preprocessing import PolynomialFeatures
 
 
