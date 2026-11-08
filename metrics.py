@@ -1,5 +1,5 @@
 import numpy as np
-from model import RegressionModel
+from model import LinearRegressionModel
 
 
 def R_squared(res, Y):
@@ -34,7 +34,7 @@ def BIC(res, Y, k):
 
 
 def VIF(X_1, X_2):
-    aux_model = RegressionModel(beta=None)
+    aux_model = LinearRegressionModel(beta=None)
     aux_model.train(X_2, X_1)
     U_2 = aux_model.get_stats()['residuals']
     R_squared_U_X1 = R_squared_real(U_2, X_1)

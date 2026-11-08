@@ -1,6 +1,6 @@
 import numpy as np
 from scipy import stats
-from model import RegressionModel
+from model import LinearRegressionModel
 from sklearn.preprocessing import PolynomialFeatures
 
 
@@ -41,7 +41,7 @@ class Reset_test:
         
     
     def test(self, p, alpha=0.05):
-        aux_model = RegressionModel(beta=None)
+        aux_model = LinearRegressionModel(beta=None)
         X_new = self.model.X
         for i in range(2, p + 1):
             X_new = np.column_stack((X_new, self.model.fitted**i))
@@ -58,11 +58,11 @@ class Chow_test:
     def test_given_t(self, t, alpha=0.05):
         X1 = self.model.X[:t]
         Y1 = self.model.Y[:t]
-        aux_model_1 = RegressionModel(beta=None)
+        aux_model_1 = LinearRegressionModel(beta=None)
         aux_model_1.train(X1, Y1)
         X2 = self.model.X[t:]
         Y2 = self.model.Y[t:]
-        aux_model_2 = RegressionModel(beta=None)
+        aux_model_2 = LinearRegressionModel(beta=None)
         aux_model_2.train(X2, Y2)
         concatenated_model = aux_model_1 + aux_model_2
         f_test = F_test(self.model, concatenated_model)
@@ -88,9 +88,9 @@ class White_test:
         res = self.model.get_stats()['residuals']**2
         X = self.model.X[:, 1:]
         X_U = PolynomialFeatures(degree=deg, include_bias=False).fit_transform(X)
-        model = RegressionModel(beta=None)
+        model = LinearRegressionModel(beta=None)
         model.train(X_U, res)
-        model_r = RegressionModel(beta=None)
+        model_r = LinearRegressionModel(beta=None)
         model_r.train(np.ones((len(res), 1)), res)
         f_test = F_test(model_r, model)
         test_res = f_test.test(res, alpha)
@@ -114,9 +114,9 @@ class BG_test:
     
     def test(self, p, alpha=0.05):
         res = self.model.get_stats()['residuals']
-        model = RegressionModel(beta=None)
+        model = LinearRegressionModel(beta=None)
         model.train(self.model.X, res)
-        aux_model = RegressionModel(beta=None)
+        aux_model = LinearRegressionModel(beta=None)
 
         lags = np.column_stack([
             np.concatenate((np.zeros(j), res[:-j]))       #giustamente la matrice dei residui di base senza lag ha lo stesso numero di righe di X, quindi ad ogni lag, bisogna anticipare con numero di zeri necessari per eguagliarne la dimensione
@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
     dataset = load_dataset("dataset")
     X, Y = dataset['RM'] - dataset['RF'], dataset['Ri_AAPL'] - dataset['RF']
-    model = RegressionModel(beta=None)
+    model = LinearRegressionModel(beta=None)
     model.train(X, Y)
     test = Chow_test(model)
     sec, alpha = test.test()
