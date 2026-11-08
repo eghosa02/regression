@@ -48,7 +48,7 @@ class LinearRegressionModel:
             [np.zeros((n2, k)), other.X          ],
         ])                                                  
 
-        combined = RegressionModel(beta=np.concatenate((self.beta, other.beta)))
+        combined = LinearRegressionModel(beta=np.concatenate((self.beta, other.beta)))
         combined.X = X
         combined.Y = np.concatenate((self.Y, other.Y))
         combined.fitted = X @ combined.beta            
