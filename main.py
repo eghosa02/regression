@@ -1,9 +1,7 @@
 from model import LinearRegressionModel
 from metrics import R_squared_real
-
-
 from dataset import load_dataset
-from visualize import plot_reg
+
 
 dataset = load_dataset("dataset").reset_index()
 X, Y = dataset[['age', 'BMI', 'sodium', 'smoker', 'gender']], dataset['arterial_pressure']
