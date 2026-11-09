@@ -60,8 +60,6 @@ if __name__ == "__main__":
     from visualize import plot_reg
 
     dataset = load_dataset("dataset").reset_index()
-    print(dataset.columns.tolist())
-    print(dataset.head())
     X, Y = dataset[['age', 'BMI', 'sodium', 'smoker', 'gender']], dataset['arterial_pressure']
     model = LinearRegressionModel(beta=None)
     model.train(X, Y)
