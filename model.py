@@ -59,9 +59,10 @@ if __name__ == "__main__":
     from dataset import load_dataset
     from visualize import plot_reg
 
-    dataset = load_dataset("dataset")
-    X, Y = dataset['RM'] - dataset['RF'], dataset['Ri_AAPL'] - dataset['RF']
+    dataset = load_dataset("dataset").reset_index()
+    print(dataset.columns.tolist())
+    print(dataset.head())
+    X, Y = dataset[['age', 'BMI', 'sodium', 'smoker', 'gender']], dataset['arterial_pressure']
     model = LinearRegressionModel(beta=None)
     model.train(X, Y)
-    plot_reg(X, Y, model)
     print(model.get_stats())
