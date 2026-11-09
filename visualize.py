@@ -1,5 +1,3 @@
-import matplotlib
-matplotlib.use("Agg")         
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -29,3 +27,4 @@ def plot_chow_stats(secquence, treshold):
     plt.ylabel('Y')
     plt.title('Stats')
     plt.savefig('stats.png')
+    plt.close()
