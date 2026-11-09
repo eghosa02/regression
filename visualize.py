@@ -1,15 +1,22 @@
 import matplotlib
 matplotlib.use("Agg")         
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def plot_reg(x, y, model):
-    plt.scatter(x, y, label='Data points')
-    plt.plot(x, model.predict(x), color='red', label='REG line')
-    plt.xlabel('X')
-    plt.ylabel('Y')
-    plt.title('Regression')
-    plt.savefig('regression.png')
+    y = np.asarray(y, dtype=float)
+    y_hat = np.asarray(model.predict(x), dtype=float)
+
+    fig, ax = plt.subplots()
+    ax.scatter(y_hat, y, alpha=0.4, label='Data points')
+    lims = [min(y.min(), y_hat.min()), max(y.max(), y_hat.max())]
+    ax.plot(lims, lims, color='red', label='y = ŷ')
+    ax.set_xlabel('Predicted systolic blood pressure (mmHg)')
+    ax.set_ylabel('Observed systolic blood pressure (mmHg)')
+    ax.legend()
+    fig.savefig('reg.png', dpi=150)
+    plt.close(fig)
 
 
 def plot_chow_stats(secquence, treshold):

@@ -65,4 +65,5 @@ if __name__ == "__main__":
     X, Y = dataset[['age', 'BMI', 'sodium', 'smoker', 'gender']], dataset['arterial_pressure']
     model = LinearRegressionModel(beta=None)
     model.train(X, Y)
+    plot_reg(X, Y, model)
     print(model.get_stats())
