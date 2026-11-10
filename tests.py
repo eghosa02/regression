@@ -40,7 +40,7 @@ class Reset_test:
         self.model = model
         
     
-    def test(self, p, alpha=0.05):
+    def test(self, p=2, alpha=0.05):
         aux_model = LinearRegressionModel(beta=None)
         X_new = self.model.X
         for i in range(2, p + 1):
