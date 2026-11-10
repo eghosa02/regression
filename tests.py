@@ -97,6 +97,53 @@ class White_test:
         return test_res
 
 
+class White_test_for_dummyes:
+    def __init__(self, model):
+        self.model = model
+
+    def _build_white_matrix(self, X, deg):
+        _, n_features = X.shape
+        
+        is_dummy = np.array([
+            set(np.unique(X[:, j])).issubset({0, 1, 0.0, 1.0}) 
+            for j in range(n_features)
+        ])
+        
+        cols = [X]
+        
+        for j in range(n_features):
+            if not is_dummy[j]:
+                cols.append((X[:, j] ** 2).reshape(-1, 1))
+                
+        if deg >= 2:
+            interactions = []
+            for j in range(n_features):
+                for m in range(j + 1, n_features):
+                    if not (is_dummy[j] and is_dummy[m]):
+                        interactions.append((X[:, j] * X[:, m]).reshape(-1, 1))
+                        
+            if interactions:
+                cols.append(np.hstack(interactions))
+                
+        X_U = np.hstack(cols)
+        #_, unique_indices = np.unique(X_U, axis=1, return_index=True)
+        #X_U = X_U[:, sorted(unique_indices)]
+        return X_U
+
+
+    def test(self, deg=2, alpha=0.05):
+        res = self.model.get_stats()['residuals']**2
+        X = self.model.X[:, 1:]
+        X_U = self._build_white_matrix(X, deg)
+        model = LinearRegressionModel(beta=None)
+        model.train(X_U, res)
+        model_r = LinearRegressionModel(beta=None)
+        model_r.train(np.ones((len(res), 1)), res)
+        f_test = F_test(model_r, model)
+        test_res = f_test.test(res, alpha)
+        return test_res
+
+
 class DW_test: #DA CONSULTARE I VALORI TABELLATI PER CONFERMARE O MENO H0
     def __init__(self, model):
         self.model = model
