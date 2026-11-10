@@ -18,6 +18,12 @@ def R_squared_real(res, Y):
     return R_squared
 
 
+def sd_errors(model):
+    var = model.get_stats()['parameter_variance']
+    sd_errors = np.sqrt(np.diag(var))
+    return sd_errors
+
+
 def adjusted_R_squared(res, Y, k):
     adj_R_squared = 1 - (1 - R_squared(res, Y)) * ((len(Y) - 1) / (len(Y) - k - 1))
     return adj_R_squared

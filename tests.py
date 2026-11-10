@@ -133,15 +133,16 @@ class White_test_for_dummyes:
             interactions = []
             for j in range(n_features):
                 for m in range(j + 1, n_features):
-                    if not (is_dummy[j] and is_dummy[m]):
-                        interactions.append((X[:, j] * X[:, m]).reshape(-1, 1))
+                    """if not (is_dummy[j] and is_dummy[m]):
+                        interactions.append((X[:, j] * X[:, m]).reshape(-1, 1))"""
+                    interactions.append((X[:, j] * X[:, m]).reshape(-1, 1))
                         
             if interactions:
                 cols.append(np.hstack(interactions))
                 
         X_U = np.hstack(cols)
-        #_, unique_indices = np.unique(X_U, axis=1, return_index=True)
-        #X_U = X_U[:, sorted(unique_indices)]
+        _, unique_indices = np.unique(X_U, axis=1, return_index=True)
+        X_U = X_U[:, sorted(unique_indices)]
         return X_U
 
 
