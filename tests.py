@@ -17,6 +17,20 @@ class T_test:
         return t_stat, p_values, accept_null
 
 
+class chi2_test:
+    def __init__(self, model):
+        self.model = model
+
+    def test(self, Y, R, r, alpha=0.05):
+        Y = np.array(Y)
+        chi2_num = (R@self.model.beta - r)
+        chi2_denum = R@self.model.get_stats()['parameter_variance']@R.T
+        chi2_test = chi2_num.T@np.linalg.inv(chi2_denum)@chi2_num
+        p_values = stats.chi2.sf(chi2_test, R.shape[0])
+        accept_null = p_values > alpha
+        return chi2_test, p_values, accept_null
+    
+
 class F_test:
     def __init__(self, model_R, model_U):
         self.model_R = model_R
